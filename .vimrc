@@ -255,16 +255,15 @@ def getExtension(str):
     return result
 
 def toComment(line, com):
+	comstr = line.lstrip()[:len(com)]
+	find = comstr.find(com)
 
-    idx = line.find(com)
-
-    if idx >= 0:
-        line = line.replace(com, "")
-    else:
-        spaceless = line.lstrip()
-        line = line.replace(spaceless, com + spaceless)
-
-    return line
+	if find >= 0:
+		line = line.replace(com, "", 1)
+	else:
+		spaceless = line.lstrip()
+		line = line.replace(spaceless, com + spaceless)
+	return line
 
 EOP
 
@@ -284,12 +283,23 @@ print(myClipBoard)
 endPython
 endfunction
 
-"파일 확장자 가져와 실행하기 TODO: 확장자별 실행 루틴
-py3 import vim
+"파일 확장자 가져와 실행하기 
 function! GenRun()
+py3 import vim
 python3 <<EOP
-ve = vim.eval('expand("%:e")')
-print(ve)
+
+path = vim.eval('expand("%:p")') #파일 전체 경로
+ve = vim.eval('expand("%:e")')   #확장자
+#print(ve)
+
+#파일별 기능#
+if ve == "py":
+	vim.command("!python3 %s"%path)
+elif ve == "go":
+	vim.command("!go run %s"%path)
+else:
+	print("Unsupported file type!")
+
 EOP
 endfunction
 
@@ -307,6 +317,7 @@ endfunction
 
 map <C-/> :py3 print("????")<cr>
 map <C-h> :call Comments()<cr>
+map <F12> :call GenRun()<cr>
 
 
 
