@@ -211,7 +211,6 @@ Plug 'dNitro/vim-pug-complete', { 'for': ['jade', 'pug'] }
 call plug#end()
 
 
-
 " ======================= test
 "nnoremap <leader>u1 :normal yypVr=<cr>
 
@@ -244,7 +243,9 @@ def getExtension(str):
         "c" : "//",
         "go" : "//",
         ".sh" : "#",
-        "h" : "//"
+        "h" : "//",
+		"js": "//",
+		"pug":"//"
         }
 
     try:
@@ -264,6 +265,14 @@ def toComment(line, com):
 		spaceless = line.lstrip()
 		line = line.replace(spaceless, com + spaceless)
 	return line
+
+
+logPath = "../vimlog/"
+
+def writeLog():
+	#현재 날짜 디렉토리에 편집한 파일 로그 적기
+	pass
+
 
 EOP
 
@@ -297,6 +306,8 @@ if ve == "py":
 	vim.command("!python3 %s"%path)
 elif ve == "go":
 	vim.command("!go run %s"%path)
+elif ve == "js":
+	vim.command("!npm start")
 else:
 	print("Unsupported file type!")
 
@@ -318,6 +329,10 @@ endfunction
 map <C-/> :py3 print("????")<cr>
 map <C-h> :call Comments()<cr>
 map <F12> :call GenRun()<cr>
+
+
+execute pathogen#infect()
+autocmd BufWritePre * :py3 print("Hello World\n")
 
 
 
