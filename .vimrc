@@ -237,17 +237,19 @@ py3 myClipBoard = ""
 
 "순수 파이썬코드
 py3 <<EOP
+import datetime
+import os
 def getExtension(str):
 # 필요한 확장자가 있으면 상황에 맞춰서 주석 특수문자 추가
     comments = {
-        "py" : "#",
-        "c" : "//",
-        "go" : "//",
-        ".sh" : "#",
-        "h" : "//",
-		"js": "//",
-		"pug":"//"
-        }
+	"py" : "#",
+	"c" : "//",
+	"go" : "//",
+	".sh" : "#",
+	"h" : "//",
+	"js": "//",
+	"pug":"//"
+   	}
 
     try:
         result = comments[str]
