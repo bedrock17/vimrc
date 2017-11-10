@@ -235,6 +235,7 @@ endfunction
 
 py3 myClipBoard = ""
 
+"순수 파이썬코드
 py3 <<EOP
 def getExtension(str):
 # 필요한 확장자가 있으면 상황에 맞춰서 주석 특수문자 추가
@@ -257,6 +258,10 @@ def getExtension(str):
 
 def toComment(line, com):
 	comstr = line.lstrip()[:len(com)]
+
+	if len(comstr) == 0:
+		return ""
+
 	find = comstr.find(com)
 
 	if find >= 0:
@@ -267,11 +272,23 @@ def toComment(line, com):
 	return line
 
 
-logPath = "../vimlog/"
-
+logPath = "/home/cube/vimlog"
 def writeLog():
 	#현재 날짜 디렉토리에 편집한 파일 로그 적기
-	pass
+
+	path = vim.eval('expand("%:p")') #파일 전체 경로
+
+	now = datetime.datetime.now()
+	ymd = now.strftime("%Y-%m-%d")
+
+	if os.path.isdir(logPath) == False:
+		os.mkdir(logPath)
+
+	logFile = open(logPath + "/" + ymd, "a")
+	logText = path + "---" + str(now) + "\n"
+
+	logFile.write(logText)
+	logFile.close()
 
 
 EOP
@@ -332,7 +349,7 @@ map <F12> :call GenRun()<cr>
 
 
 execute pathogen#infect()
-autocmd BufWritePre * :py3 print("Hello World\n")
+autocmd BufWritePre * :py3 writeLog()
 
 
 
